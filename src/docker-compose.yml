@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  # Database section
+  sqlserverdb:
+      image: mcr.microsoft.com/mssql/server:2019-latest
+
+
+
+
+networks:
+  default:
+    name: tedu_microservices
+    driver: bridge
+
+volumes:
+  sqlserver_data:
+    driver: sqlserver_data

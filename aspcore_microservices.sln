@@ -6,6 +6,8 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{E26F2E8B-DA89-4778-A9BC-88795BFE28D0}"
 	ProjectSection(SolutionItems) = preProject
 		Capture.PNG = Capture.PNG
+		src\docker-compose.override.yml = src\docker-compose.override.yml
+		src\docker-compose.yml = src\docker-compose.yml
 		global.json = global.json
 		Readme.md = Readme.md
 	EndProjectSection
