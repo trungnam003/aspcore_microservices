@@ -1,5 +1,8 @@
-using Serilog;
 using Common.Logging;
+using Product.API.Extensions;
+using Product.API.Persistence;
+using Serilog;
+
 namespace Product.API
 {
     public class Program
@@ -7,38 +10,39 @@ namespace Product.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Host.UseSerilog(SerilogLogger.Configure);
 
-            Log.Information("Starting Product.API");
             try
             {
-                {
-                    // Add services to the container.
-                    builder.Services.AddControllers();
-                    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-                    builder.Services.AddEndpointsApiExplorer();
-                    builder.Services.AddSwaggerGen();
-                }
+                builder.Host.UseSerilog(SerilogLogger.Configure);
+                builder.Host.AddAppConfigurations();
+
+                builder.Services.ConfigureServices(builder.Configuration);
 
                 var app = builder.Build();
-                {
-                    // Configure the HTTP request pipeline.
-                    if (app.Environment.IsDevelopment())
-                    {
-                        app.UseSwagger();
-                        app.UseSwaggerUI();
-                    }
 
-                    app.UseHttpsRedirection();
+                app.UseApplication();
 
-                    app.UseAuthorization();
-
-
-                    app.MapControllers();
-                }
+                app.MigrateDatabase<ProductContext>(
+                        (context, _) =>
+                        {
+                            ProductContextSeed.SeedProductAsync(context, Log.Logger).Wait();
+                        }
+                    )
+                    .Run();
 
                 app.Run();
-            }finally
+            }
+            catch (Exception ex)
+            {
+                string type = ex.GetType().Name;
+
+                if (type == "StopTheHostException")
+                    throw;
+
+                Log.Fatal($"Product.API terminated unexpectedly {ex}");
+            }
+
+            finally
             {
                 Log.Fatal("Stopping Product.API");
                 Log.CloseAndFlush();
