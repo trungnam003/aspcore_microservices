@@ -13,12 +13,12 @@ namespace Product.API.Repositories
         {
         }
 
-        public async Task<CatalogProduct> GetProductAsync(long id)
+        public async Task<CatalogProduct?> GetProductAsync(long id)
         {
             return await GetByIdAsync(id);
         }
 
-        public async Task<CatalogProduct> GetProductByNoAsync(string productNo)
+        public async Task<CatalogProduct?> GetProductByNoAsync(string productNo)
         {
             return await FindByCondition(x => x.No.Equals(productNo)).FirstOrDefaultAsync();
         }
@@ -41,8 +41,6 @@ namespace Product.API.Repositories
                 await DeleteAsync(product);
             }
         }
-
-        
 
         public async Task UpdateProductAsync(CatalogProduct product)
         {
