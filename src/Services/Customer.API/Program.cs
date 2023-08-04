@@ -1,5 +1,5 @@
-using Serilog;
 using Common.Logging;
+using Serilog;
 namespace Customer.API
 {
     public class Program

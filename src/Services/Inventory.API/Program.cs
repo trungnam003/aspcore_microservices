@@ -1,5 +1,5 @@
-using Serilog;
 using Common.Logging;
+using Serilog;
 namespace Inventory.API
 {
     public class Program
