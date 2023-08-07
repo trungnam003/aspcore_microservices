@@ -1,14 +1,37 @@
 version: '3.8'
 
 services:
-  sqlserverdb:
-    container_name: sqlserverdb
+  productdb:
+    container_name: productdb
     environment:
-      SA_PASSWORD: "Passw@rd!"
-      ACCEPT_EULA: "Y"
+      MYSQL_ROOT_PASSWORD: Trungnam.123
     restart: always
     volumes:
-      - sqlserver_data:/var/lib/sqlserver/data
+      - mysql_data:/var/lib/mysql
     ports:
-      - "1435:1433"
+      - "3308:3306"
+  
+  product.api:
+    container_name: product.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "ConnectionStrings:DefaultConnection=Server=productdb;Port=3306;Database=ProductDb;Uid=root;Pwd=Trungnam.123;"
+    # restart: always
+    depends_on:
+      - productdb
+    ports:
+      - "6002:80"
+    
 
+
+  portainer:
+    container_name: portainer
+    restart: always
+    ports:
+      - "8080:8000"
+      - "9000:9000"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - portainer_data:/data
+    

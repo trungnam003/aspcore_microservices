@@ -36,7 +36,7 @@ namespace Product.API.Repositories
         public async Task DeleteProductAsync(long id)
         {
             var product = await GetProductAsync(id);
-            if(product != null)
+            if (product != null)
             {
                 await DeleteAsync(product);
             }
