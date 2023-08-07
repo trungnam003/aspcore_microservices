@@ -3,21 +3,21 @@ version: "3.8"
 services:
   productdb:
     image: mysql:8.0.30
-    networks:
-    - default
+  
+  customerdb:
+    image: postgres:alpine3.16
 
   portainer:
     image: portainer/portainer-ce
-    networks:
-      - default
+
+  pgadmin:
+    image: dpage/pgadmin4
 
   product.api:
     image: ${DOCKER_REGISTRY-}product-api:${PLATFORM:-linux}-${TAG:-latest}
     build: 
       context: .
       dockerfile: Services/Product.API/Dockerfile
-    networks:
-      - default
 
 #network section
 networks:
@@ -32,3 +32,9 @@ volumes:
 
   portainer_data:
     name: portainer_data
+  
+  postgres_data:
+    name: postgres_data
+
+  pgadmin_data:
+    name: pgadmin_data

@@ -11,6 +11,18 @@ services:
     ports:
       - "3308:3306"
   
+  customerdb:
+    container_name: customerdb
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD=Trungnam.123
+      - POSTGRES_DB=CustomerDb
+    restart: always
+    ports:
+        - "5433:5432"
+    volumes:
+        - postgres_data:/var/lib/postgresql/data
+  
   product.api:
     container_name: product.api
     environment:
@@ -22,8 +34,6 @@ services:
       - productdb
     ports:
       - "6002:80"
-    
-
 
   portainer:
     container_name: portainer
@@ -34,4 +44,15 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
+
+  pgadmin:
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=thtntrungnam@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=Trungnam.123
+    restart: always
+    ports:
+        - "5050:80"
+    volumes:
+        - pgadmin_data:/root/.pgadmin
     

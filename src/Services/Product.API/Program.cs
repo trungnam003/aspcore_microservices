@@ -30,7 +30,7 @@ namespace Product.API
                     )
                     .Run();
 
-                app.Run();
+                //app.Run();
             }
             catch (Exception ex)
             {
