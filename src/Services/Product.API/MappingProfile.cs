@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
-using Shared.DTOs.Product;
-using Product.API.Entities;
 using Infrastructure.Mapping;
+using Product.API.Entities;
+using Shared.DTOs.Product;
 
 namespace Product.API
 {
@@ -15,5 +15,5 @@ namespace Product.API
                 .IgnoreAllNonExisting();
         }
     }
-    
+
 }
