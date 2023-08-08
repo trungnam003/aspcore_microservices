@@ -52,7 +52,7 @@ namespace Product.API.Extensions
         private static IServiceCollection AddInfrastructureServices(this IServiceCollection services)
         {
             // gán kiểu cho các interface có Type Generic 
-            services.AddScoped(typeof(IRepositoryBaseAsync<,,>), typeof(RepositoryBaseAsync<,,>))
+            services.AddScoped(typeof(IRepositoryBase<,,>), typeof(RepositoryBase<,,>))
                 .AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
 
             // gán kiểu cho các interface không có Type Generic
