@@ -23,13 +23,22 @@ services:
     volumes:
         - postgres_data:/var/lib/postgresql/data
   
+  basketdb: 
+    container_name: basketdb
+    restart: always
+    command: ["redis-server", "--appendonly", "yes"]
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+  
   product.api:
     container_name: product.api
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - "ConnectionStrings:DefaultConnection=Server=productdb;Port=3306;Database=ProductDb;Uid=root;Pwd=Trungnam.123;"
-    # restart: always
+    restart: always
     depends_on:
       - productdb
     ports:
@@ -41,11 +50,23 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+:80
       - "ConnectionStrings:DefaultConnection=Server=customerdb;Port=5432;Database=CustomerDb;User Id=postgres;Password=Trungnam.123;"
-    # restart: always
+    restart: always
     depends_on:
       - customerdb
     ports:
       - "6003:80"
+  
+  basket.api:
+    container_name: basket.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "CacheSettings:ConnectionString=basketdb:6379"
+    restart: always
+    depends_on:
+      - basketdb
+    ports:
+      - "6004:80"
 
   portainer:
     container_name: portainer

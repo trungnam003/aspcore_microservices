@@ -6,6 +6,9 @@ services:
   
   customerdb:
     image: postgres:alpine3.16
+  
+  basketdb:
+    image: redis:alpine
 
   portainer:
     image: portainer/portainer-ce
@@ -24,6 +27,12 @@ services:
     build: 
       context: .
       dockerfile: Services/Customer.API/Dockerfile
+  
+  basket.api:
+    image: ${DOCKER_REGISTRY-}basket-api:${PLATFORM:-linux}-${TAG:-latest}
+    build: 
+      context: .
+      dockerfile: Services/Basket.API/Dockerfile
 
 #network section
 networks:
@@ -44,3 +53,6 @@ volumes:
 
   pgadmin_data:
     name: pgadmin_data
+
+  redis_data:
+    name: redis_data
