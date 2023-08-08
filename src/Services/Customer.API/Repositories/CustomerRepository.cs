@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Customer.API.Repositories
 {
-    public class CustomerRepository : RepositoryBaseAsync<Entities.Customer, int, CustomerContext>, ICustomerRepository
+    public class CustomerRepository : RepositoryBase<Entities.Customer, int, CustomerContext>, ICustomerRepository
     {
         public CustomerRepository(CustomerContext context, IUnitOfWork<CustomerContext> unitOfWork) : base(context, unitOfWork)
         {

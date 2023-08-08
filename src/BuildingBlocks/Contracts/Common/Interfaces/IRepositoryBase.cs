@@ -18,7 +18,7 @@ namespace Contracts.Common.Interfaces
         Task<T?> GetByIdAsync(K id, params Expression<Func<T, object>>[] includeProperties);
     }
 
-    public interface IRepositoryBaseAsync<T, K> : IRepositoryQueryBase<T, K>
+    public interface IRepositoryBase<T, K> : IRepositoryQueryBase<T, K>
         where T : EntityBase<K>
     {
         K Create(T entity);
@@ -42,7 +42,7 @@ namespace Contracts.Common.Interfaces
         Task SaveAsync();
         void Save();
     }
-    public interface IRepositoryBaseAsync<T, K, TContext> : IRepositoryBaseAsync<T, K>
+    public interface IRepositoryBase<T, K, TContext> : IRepositoryBase<T, K>
         where T : EntityBase<K>
         where TContext : DbContext
     {

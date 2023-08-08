@@ -37,7 +37,7 @@ namespace Customer.API
 
                 builder.Services.AddAutoMapper(cfgs => cfgs.AddProfile(new MappingProfile()));
 
-                builder.Services.AddScoped(typeof(IRepositoryBaseAsync<,,>), typeof(RepositoryBaseAsync<,,>));
+                builder.Services.AddScoped(typeof(IRepositoryBase<,,>), typeof(RepositoryBase<,,>));
                 builder.Services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
                 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 
@@ -58,6 +58,9 @@ namespace Customer.API
                     }
 
                     app.UseAuthorization();
+
+                    // Redirect to swagger
+                    app.MapGet("/", () => Results.Redirect("/swagger"));
 
                     // Minimal API
                     app.MapCustomerController();
