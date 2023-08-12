@@ -7,11 +7,15 @@ namespace Inventory.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Host.UseSerilog(SerilogLogger.Configure);
-
-            Log.Information("Starting Inventory.API");
+            
+            Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+            var environment = builder.Environment;
+            var applicationName = environment.ApplicationName;
+            var environmentName = environment.EnvironmentName ?? "Development";
+            Log.Information($"Starting ({applicationName})-({environmentName})...");
             try
             {
+                builder.Host.UseSerilog(SerilogLogger.Configure);
                 {
                     // Add services to the container.
                     builder.Services.AddControllers();
@@ -38,6 +42,10 @@ namespace Inventory.API
                 }
 
                 app.Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Inventory.API terminated unexpectedly");
             }
             finally
             {

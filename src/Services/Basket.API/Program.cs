@@ -9,6 +9,12 @@ namespace Basket.API
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+            var environment = builder.Environment;
+            var applicationName = environment.ApplicationName;
+            var environmentName = environment.EnvironmentName ?? "Development";
+            Log.Information($"Starting ({applicationName})-({environmentName})...");
+
             try
             {
                 builder.Host.UseSerilog(SerilogLogger.Configure);
@@ -29,7 +35,6 @@ namespace Basket.API
 
                 var app = builder.Build();
                 {
-                    Log.Information("Starting Basket.API");
                     // Configure the HTTP request pipeline.
                     if (app.Environment.IsDevelopment())
                     {

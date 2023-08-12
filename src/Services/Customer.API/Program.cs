@@ -21,11 +21,16 @@ namespace Customer.API
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-            builder.Host.UseSerilog(SerilogLogger.Configure);
+
+            Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
+            var environment = builder.Environment;
+            var applicationName = environment.ApplicationName;
+            var environmentName = environment.EnvironmentName ?? "Development";
+            Log.Information($"Starting ({applicationName})-({environmentName})...");
 
             try
             {
-
+                builder.Host.UseSerilog(SerilogLogger.Configure);
                 // Add services to the container.
                 builder.Services.AddControllers();
                 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -49,7 +54,6 @@ namespace Customer.API
 
                 var app = builder.Build();
                 {
-                    Log.Information("Starting Customer.API");
                     // Configure the HTTP request pipeline.
                     if (app.Environment.IsDevelopment())
                     {
