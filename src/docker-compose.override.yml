@@ -32,6 +32,17 @@ services:
     volumes:
       - redis_data:/data
   
+  orderdb:
+    container_name: orderdb
+    environment:
+        SA_PASSWORD: "Trungnam.123"
+        ACCEPT_EULA: "Y"
+    restart: always
+    volumes:
+        - sqlserver_data:/var/lib/sqlserver/data
+    ports:
+        - "1435:1433"
+  
   product.api:
     container_name: product.api
     environment:
@@ -67,6 +78,18 @@ services:
       - basketdb
     ports:
       - "6004:80"
+
+  ordering.api:
+    container_name: ordering.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "ConnectionStrings:DefaultConnectionString=Server=orderdb;Database=OrderDb;User=sa;Password=Trungnam.123;MultipleActiveResultSets=True"
+    restart: always
+    depends_on:
+      - orderdb
+    ports:
+      - "6005:80"
 
   portainer:
     container_name: portainer

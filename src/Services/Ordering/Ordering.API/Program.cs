@@ -1,5 +1,13 @@
 using Common.Logging;
+using Contracts.Common.Interfaces;
+using Infrastructure.Common;
+using Ordering.API.Extensions;
+using Ordering.Applications;
+using Ordering.Infrastructure;
+using Ordering.Infrastructure.Persistence;
 using Serilog;
+using System.Diagnostics;
+
 namespace Odering.API
 {
     public class Program
@@ -12,17 +20,23 @@ namespace Odering.API
             var applicationName = environment.ApplicationName;
             var environmentName = environment.EnvironmentName ?? "Development";
             Log.Information($"Starting ({applicationName})-({environmentName})...");
-           
+
             try
             {
                 builder.Host.UseSerilog(SerilogLogger.Configure);
-
+                builder.Host.AddAppConfigurations();
                 {
+                    builder.Services.AddScoped<ISerializeService, SerializeService>();
+                    builder.Services.AddSingleton<Stopwatch>(new Stopwatch());
                     // Add services to the container.
                     builder.Services.AddControllers();
                     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
                     builder.Services.AddEndpointsApiExplorer();
                     builder.Services.AddSwaggerGen();
+
+                    builder.Services.AddConfigurationSettings(builder.Configuration);
+                    builder.Services.AddInfrastructureServices(builder.Configuration);
+                    builder.Services.AddApplicationServices();
                 }
 
                 var app = builder.Build();
@@ -34,7 +48,7 @@ namespace Odering.API
                         app.UseSwaggerUI();
                     }
 
-                    app.UseHttpsRedirection();
+                    //app.UseHttpsRedirection();
 
                     app.UseAuthorization();
 
@@ -42,7 +56,30 @@ namespace Odering.API
                     app.MapControllers();
                 }
 
+                using (var scope = app.Services.CreateScope())
+                {
+                    var services = scope.ServiceProvider;
+                    try
+                    {
+                        var context = services.GetRequiredService<OrderContextSeed>();
+                        context.InitialiseAsync().Wait();
+                        context.SeedAsync().Wait();
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Fatal(ex, "An error occurred while migrating or seeding the database.");
+                    }
+                }
                 app.Run();
+            }
+            catch (Exception ex)
+            {
+                string type = ex.GetType().Name;
+
+                if (type == "StopTheHostException")
+                    throw;
+
+                Log.Fatal($"Product.API terminated unexpectedly {ex}");
             }
             finally
             {
