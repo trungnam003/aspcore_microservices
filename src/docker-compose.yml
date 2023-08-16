@@ -9,6 +9,9 @@ services:
   
   basketdb:
     image: redis:alpine
+  
+  orderdb:
+    image: mcr.microsoft.com/mssql/server:2019-latest
 
   portainer:
     image: portainer/portainer-ce
@@ -34,6 +37,12 @@ services:
       context: .
       dockerfile: Services/Basket.API/Dockerfile
 
+  ordering.api:
+    image: ${DOCKER_REGISTRY-}ordering-api:${PLATFORM:-linux}-${TAG:-latest}
+    build: 
+      context: .
+      dockerfile: Services/Ordering/Ordering.API/Dockerfile
+
 #network section
 networks:
   default:
@@ -56,3 +65,6 @@ volumes:
 
   redis_data:
     name: redis_data
+
+  sqlserver_data:
+    name: sqlserver_data

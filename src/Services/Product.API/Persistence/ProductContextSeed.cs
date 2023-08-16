@@ -1,4 +1,5 @@
-﻿using Product.API.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Product.API.Entities;
 using ILogger = Serilog.ILogger;
 
 namespace Product.API.Persistence
@@ -7,7 +8,7 @@ namespace Product.API.Persistence
     {
         public static async Task SeedProductAsync(ProductContext productContext, ILogger logger)
         {
-            if (!productContext.Products.Any())
+            if (!productContext.Products.Any() && productContext.Database.IsMySql())
             {
                 productContext.Products.AddRange(GetCatalogProducts());
                 await productContext.SaveChangesAsync();

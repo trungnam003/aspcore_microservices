@@ -6,6 +6,7 @@ using Pomelo.EntityFrameworkCore.MySql.Infrastructure;
 using Product.API.Persistence;
 using Product.API.Repositories;
 using Product.API.Repositories.Interfaces;
+using System.Reflection;
 
 namespace Product.API.Extensions
 {
@@ -27,6 +28,8 @@ namespace Product.API.Extensions
             services.AddInfrastructureServices();
 
             services.AddAutoMapper(cfg => cfg.AddProfile(new MappingProfile()));
+            //services.AddAutoMapper(Assembly.GetExecutingAssembly()); Tự động nhận các profile trong assembly
+
             return services;
         }
 
