@@ -1,6 +1,8 @@
 using Common.Logging;
 using Contracts.Common.Interfaces;
+using Contracts.Messages;
 using Infrastructure.Common;
+using Infrastructure.Messages;
 using Ordering.API.Extensions;
 using Ordering.Applications;
 using Ordering.Infrastructure;
@@ -28,6 +30,7 @@ namespace Odering.API
                 {
                     builder.Services.AddScoped<ISerializeService, SerializeService>();
                     builder.Services.AddSingleton<Stopwatch>(new Stopwatch());
+                    builder.Services.AddScoped<IMessageProducer, RabbitMQProducer>();
                     // Add services to the container.
                     builder.Services.AddControllers();
                     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

@@ -18,6 +18,9 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
+  
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
 
   product.api:
     image: ${DOCKER_REGISTRY-}product-api:${PLATFORM:-linux}-${TAG:-latest}

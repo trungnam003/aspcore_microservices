@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Contracts.Messages;
 using Contracts.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -24,12 +25,15 @@ namespace Odering.API.Controllers
         private readonly IOrderRepository _repository;
         private readonly IMapper _mapper;
         private readonly IEmailService<MailRequest> _emailService;
-        public OrderController(IMediator mediator, IOrderRepository repository, IMapper mapper, IEmailService<MailRequest> emailService)
+        private readonly IMessageProducer _messageProducer;
+        public OrderController(IMediator mediator, IOrderRepository repository, IMapper mapper, IEmailService<MailRequest> emailService,
+            IMessageProducer messageProducer)
         {
             _mediator = mediator ?? throw new ArgumentException(nameof(mediator));
             _repository = repository ?? throw new ArgumentException(nameof(repository));
             _mapper = mapper ?? throw new ArgumentException(nameof(mapper));
             _emailService = emailService ?? throw new ArgumentException(nameof(emailService));
+            _messageProducer = messageProducer;
         }
 
         private static class RouteNames
@@ -55,6 +59,8 @@ namespace Odering.API.Controllers
             {
                 var command = _mapper.Map<CreateOrderCommand>(model);
                 var result = await _mediator.Send(command);
+                OrderDto order = result.Data;
+                _messageProducer.SendMessages(order);
                 return Ok(result);
             }
             catch (Exception ex)
