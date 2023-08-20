@@ -37,6 +37,7 @@ namespace Odering.API
                     builder.Services.AddConfigurationSettings(builder.Configuration);
                     builder.Services.AddInfrastructureServices(builder.Configuration);
                     builder.Services.AddApplicationServices();
+                    builder.Services.ConfigureMassTransit();
                 }
 
                 var app = builder.Build();
