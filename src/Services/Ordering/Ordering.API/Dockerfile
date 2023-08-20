@@ -11,6 +11,7 @@ COPY ["BuildingBlocks/Common.Logging/Common.Logging.csproj", "BuildingBlocks/Com
 COPY ["BuildingBlocks/Contracts/Contracts.csproj", "BuildingBlocks/Contracts/"]
 COPY ["BuildingBlocks/Infrastructure/Infrastructure.csproj", "BuildingBlocks/Infrastructure/"]
 COPY ["BuildingBlocks/Shared/Shared.csproj", "src/BuildingBlocks/Shared/"]
+COPY ["BuildingBlocks/EventBus/EventBus.Messages/EventBus.Messages.csproj", "BuildingBlocks/EventBus/EventBus.Messages/"]
 COPY ["Services/Ordering/Ordering.Applications/Ordering.Applications.csproj", "Services/Ordering/Ordering.Applications/"]
 COPY ["Services/Ordering/Ordering.Domain/Ordering.Domain.csproj", "Services/Ordering/Ordering.Domain/"]
 COPY ["Services/Ordering/Ordering.Infrastructure/Ordering.Infrastructure.csproj", "Services/Ordering/Ordering.Infrastructure/"]

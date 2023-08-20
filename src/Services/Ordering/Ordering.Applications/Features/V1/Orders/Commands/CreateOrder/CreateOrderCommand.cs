@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using EventBus.Messages.IntegrationEvents.Events;
 using MediatR;
 using Ordering.Application.Common.Mappings;
 using Ordering.Domain.Entities;
@@ -15,6 +16,7 @@ namespace Ordering.Application.Features.V1.Orders
         {
             profile.CreateMap<CreateOrderDto, CreateOrderCommand>();
             profile.CreateMap<CreateOrderCommand, Order>();
+            profile.CreateMap<CreateOrderCommand, BasketCheckoutEvent>().ReverseMap();
         }
     }
 }
