@@ -28,7 +28,8 @@ namespace Ordering.Applications.Features.V1.Orders.Commands.DeleteOrder
                 _logger.Error("Order Not Found");
                 throw new NotFoundException("Order Not Found");
             }
-            await _repository.DeleteAsync(order);
+            _repository.Delete(order);
+            order.DeletedOrder();
             await _repository.SaveChangesAsync();
             return true;
         }
