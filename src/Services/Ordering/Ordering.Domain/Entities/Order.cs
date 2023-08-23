@@ -1,5 +1,6 @@
-﻿using Contracts.Domains;
+﻿using Contracts.Common.Events;
 using Ordering.Domain.Enums;
+using Ordering.Domain.OrderAggregate.Events;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -7,7 +8,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Ordering.Domain.Entities
 {
-    public class Order : EntityAuditBase<long>
+    public class Order : AuditableEventEntity<long>
     {
         [Required]
         [Column(TypeName = "nvarchar(150)")]
@@ -31,5 +32,17 @@ namespace Ordering.Domain.Entities
         [Column(TypeName = "nvarchar(1024)")]
         public string InvoiceAddress { get; set; }
         public EOrderStatus Status { get; set; }
+
+        public Order AddedOrder()
+        {
+            AddDomainEvent(new OrderCreatedEvent(Id, UserName, DocumentNo, TotalPrice, EmailAddress, ShippingAddress, InvoiceAddress));
+            return this;
+        }
+
+        public Order DeletedOrder()
+        {
+            AddDomainEvent(new OrderDeletedEvent(Id));
+            return this;
+        }
     }
 }
