@@ -13,7 +13,7 @@ namespace Ordering.API.Applications.IntegrationEvents.EventsHandler
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-public BasketCheckoutEventHandler(IMediator mediator, IMapper mapper, ILogger logger)
+        public BasketCheckoutEventHandler(IMediator mediator, IMapper mapper, ILogger logger)
         {
             _mediator = mediator ?? throw new ArgumentException(nameof(mediator));
             _mapper = mapper ?? throw new ArgumentException(nameof(mapper));

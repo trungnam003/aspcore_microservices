@@ -1,4 +1,5 @@
 using Common.Logging;
+using Inventory.API.Extensions;
 using Serilog;
 namespace Inventory.API
 {
@@ -22,6 +23,11 @@ namespace Inventory.API
                     // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
                     builder.Services.AddEndpointsApiExplorer();
                     builder.Services.AddSwaggerGen();
+                    // lower case urls
+                    builder.Services.Configure<RouteOptions>(options => options.LowercaseUrls = true);
+                    builder.Services.AddConfigurationSettings(builder.Configuration);
+                    builder.Services.AddInfrastructureServices();
+                    builder.Services.ConfigureMongoDb();
                 }
 
                 var app = builder.Build();
@@ -33,14 +39,16 @@ namespace Inventory.API
                         app.UseSwaggerUI();
                     }
 
-                    app.UseHttpsRedirection();
+ 
 
                     app.UseAuthorization();
 
 
-                    app.MapControllers();
+                    //app.MapControllers();
+                    // auto map default controller route
+                    app.MapDefaultControllerRoute();
                 }
-
+                app.MigrateDatabase();
                 app.Run();
             }
             catch (Exception ex)
