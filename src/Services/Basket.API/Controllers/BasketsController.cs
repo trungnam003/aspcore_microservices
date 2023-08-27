@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Basket.API.Entities;
+using Basket.API.GrpcServices;
 using Basket.API.Repositories.Interfaces;
 using EventBus.Messages.IntegrationEvents.Events;
 using MassTransit;
@@ -16,11 +17,13 @@ namespace Basket.API.Controllers
         private readonly IBasketRepository _repository;
         private readonly IPublishEndpoint _publishEndpoint;
         private readonly IMapper _mapper;
-        public BasketsController(IBasketRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint)
+        private readonly StockItemGrpcService _stockItemGrpcService;
+        public BasketsController(IBasketRepository repository, IMapper mapper, IPublishEndpoint publishEndpoint, StockItemGrpcService stockItemGrpcService)
         {
             _repository = repository;
             _mapper = mapper;
             _publishEndpoint = publishEndpoint;
+            _stockItemGrpcService = stockItemGrpcService;
         }
 
         [HttpGet("{username}", Name = "GetBasketByUserName")]
@@ -35,6 +38,12 @@ namespace Basket.API.Controllers
         [ProducesResponseType(typeof(Cart), StatusCodes.Status200OK)]
         public async Task<ActionResult<Cart>> UpdateBasket([FromBody] Cart basket)
         {
+            foreach (var item in basket.Items)
+            {
+                var stock = await _stockItemGrpcService.GetStock(item.ItemNo);
+                item.SetAvailableQuantity(stock.Quantity);
+            }
+
             var options = new DistributedCacheEntryOptions()
                 .SetAbsoluteExpiration(DateTimeOffset.Now.AddMinutes(60))
                 .SetSlidingExpiration(TimeSpan.FromMinutes(5));

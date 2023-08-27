@@ -43,6 +43,14 @@ services:
     ports:
         - "1435:1433"
   
+  inventorydb: 
+    container_name: inventorydb
+    restart: always
+    ports:
+        - "27018:27017"
+    volumes:
+        - mongo_data:/data/db
+  
   product.api:
     container_name: product.api
     environment:
@@ -74,6 +82,7 @@ services:
       - ASPNETCORE_URLS=http://+:80
       - "CacheSettings:ConnectionString=basketdb:6379"
       - "EventBusSettings:HostAddress=amqp://guest:guest@rabbitmq:5672"
+      - "GrpcSettings:StockUrl=http://inventory.grpc"
     restart: always
     depends_on:
       - basketdb
@@ -95,6 +104,31 @@ services:
     ports:
       - "6005:80"
 
+  inventory.api:
+    container_name: inventory.api
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "MongoDbDatabaseSettings:ConnectionString=mongodb://inventorydb:27017"
+      - "MongoDbDatabaseSettings:DatabaseName=InventoryDb"
+    restart: always
+    depends_on:
+      - inventorydb
+    ports:
+      - "6006:80"
+
+  inventory.grpc:
+    container_name: inventory.grpc
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:80
+      - "MongoDbDatabaseSettings:ConnectionString=mongodb://inventorydb:27017"
+      - "MongoDbDatabaseSettings:DatabaseName=InventoryDb"
+    restart: always
+    depends_on:
+      - inventorydb
+    ports:
+      - "6007:80"
   portainer:
     container_name: portainer
     restart: always

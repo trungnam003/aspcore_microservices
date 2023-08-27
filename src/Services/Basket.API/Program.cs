@@ -33,6 +33,7 @@ namespace Basket.API
                     builder.Services.ConfigureRedis(builder.Configuration);
                     builder.Services.AddConfigurationSettings(builder.Configuration);
                     builder.Services.ConfigureMassTransit();
+                    builder.Services.ConfigureGrpcServices();
                     builder.Services.AddAutoMapper(cfgs => cfgs.AddProfile(new MappingProfile()));
                 }
 
