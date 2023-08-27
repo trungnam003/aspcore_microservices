@@ -1,9 +1,12 @@
-﻿using Basket.API.Repositories;
+﻿using Basket.API.GrpcServices;
+using Basket.API.Repositories;
 using Basket.API.Repositories.Interfaces;
 using Contracts.Common.Interfaces;
 using EventBus.Messages.IntegrationEvents.Interfaces;
+using Grpc.Core;
 using Infrastructure.Common;
 using Infrastructure.Extensions;
+using Inventory_gRPC.Protos;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using RabbitMQ.Client;
@@ -17,6 +20,11 @@ namespace Basket.API.Extensions
         {
             var eventBusSettings = configuration.GetSection(nameof(EventBusSettings))
                 .Get<EventBusSettings>();
+
+            var grpcSettings = configuration.GetSection(nameof(GrpcSettings))
+                .Get<GrpcSettings>();
+
+            services.AddSingleton(grpcSettings);
             return services;
         }
         public static IServiceCollection ConfigureServices(this IServiceCollection services)
@@ -40,6 +48,24 @@ namespace Basket.API.Extensions
                 options.Configuration = redisSettings.ConnectionString;
             });
         }
+
+        public static IServiceCollection ConfigureGrpcServices (this IServiceCollection services)
+        {
+            var settings = services.GetOptions<GrpcSettings>(nameof(GrpcSettings));
+            services.AddGrpcClient<StockProtoService.StockProtoServiceClient>(options =>
+            {
+                options.Address = new Uri(settings.StockUrl);
+                // configue no ssl
+                //options.ChannelOptionsActions.Add(channelOptions =>
+                //{
+                //    channelOptions.Credentials = ChannelCredentials.Insecure;
+                //});
+            });
+
+            services.AddScoped<StockItemGrpcService>();
+            return services;
+        }
+
         public static void ConfigureMassTransit(this IServiceCollection services)
         {
             var settings = services.GetOptions<EventBusSettings>(nameof(EventBusSettings));

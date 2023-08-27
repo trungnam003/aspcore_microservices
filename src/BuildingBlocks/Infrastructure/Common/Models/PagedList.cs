@@ -1,4 +1,5 @@
-﻿using MongoDB.Driver;
+﻿using Microsoft.EntityFrameworkCore;
+using MongoDB.Driver;
 using Shared.SeedWord;
 using System;
 using System.Collections.Generic;
@@ -40,5 +41,16 @@ namespace Infrastructure.Common.Models
                 .ToListAsync();
             return new PagedList<T>(items, count, pageNumber, pageSize);
         }
+        public static async Task<PagedList<T>> ToPagedList(IQueryable<T> source, int pageNumber, int pageSize
+            )
+        {
+            var count = await source.CountAsync();
+            var items = await source
+                .Skip((pageNumber - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+            return new PagedList<T>(items, count, pageNumber, pageSize);
+        }
+
     }
 }
