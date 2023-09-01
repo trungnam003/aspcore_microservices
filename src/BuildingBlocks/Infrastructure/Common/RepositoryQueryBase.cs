@@ -22,7 +22,7 @@ namespace Infrastructure.Common
         }
         public IQueryable<T> FindAll(bool trackChanges = false)
         {
-            return trackChanges ? _context.Set<T>().AsNoTracking() : _context.Set<T>();
+            return !trackChanges ? _context.Set<T>().AsNoTracking() : _context.Set<T>();
         }
 
         public IQueryable<T> FindAll(bool trackChanges = false, params Expression<Func<T, object>>[] includeProperties)
