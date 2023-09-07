@@ -21,7 +21,8 @@ namespace Product.API
             {
                 builder.Host.UseSerilog(SerilogLogger.Configure);
                 builder.Host.AddAppConfigurations();
-
+                
+                builder.Services.AddConfigurationSettings(builder.Configuration);
                 builder.Services.ConfigureServices(builder.Configuration);
 
                 var app = builder.Build();

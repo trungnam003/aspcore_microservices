@@ -1,0 +1,320 @@
+{
+  "GlobalConfiguration": {
+    "BaseUrl": "http://localhost:5001"
+  },
+  "Routes": [
+    // CustomerAPI http://localhost:5003/api/customers
+    {
+      "UpstreamPathTemplate": "/customers/{username}",
+      "UpstreamHttpMethod": [ "GET" ],
+
+      "DownStreamPathTemplate": "/api/customers/{username}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5003
+        }
+      ],
+      "SwaggerKey": "customer"
+    },
+    // ProductAPI http://localhost:5002/api/products
+    {
+      "UpstreamPathTemplate": "/products/{any}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "PATCH", "DELETE" ],
+
+      "DownStreamPathTemplate": "/api/products/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      //"AuthenticationOptions": {
+      //  "AuthenticationProviderKey": "Bearer",
+      //  "AllowedScopes": []
+      //},
+      //"RouteClaimsRequirement": {
+      //  "Role": "Admin"
+      //},
+      "SwaggerKey": "product"
+    },
+    {
+      "UpstreamPathTemplate": "/products/{any}",
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "PATCH", "DELETE" ],
+
+      "DownStreamPathTemplate": "/api/products/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "SwaggerKey": "product"
+    },
+    {
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "PATCH", "DELETE" ],
+      "UpstreamPathTemplate": "/products",
+
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "DownStreamPathTemplate": "/api/products",
+      "DownstreamScheme": "http",
+
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "2s",
+        "PeriodTimespan": 1, //second
+        "Limit": 1
+      },
+
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 2, // sau 2 lan quang loi
+        "DurationOfBreak": 2000,
+        "TimeoutValue": 3000
+      },
+
+      "FileCacheOptions": {
+        "TtlSeconds": 15,
+        "Region": "ProductsRegion"
+      },
+      "SwaggerKey": "product"
+    },
+    {
+
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "PATCH", "DELETE" ],
+      "UpstreamPathTemplate": "/products",
+
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "DownStreamPathTemplate": "/api/products",
+      "DownstreamScheme": "http",
+
+      "RateLimitOptions": {
+        "ClientWhitelist": [],
+        "EnableRateLimiting": true,
+        "Period": "2s",
+        "PeriodTimespan": 1, //second
+        "Limit": 1
+      },
+      "QoSOptions": {
+        "ExceptionsAllowedBeforeBreaking": 2, // sau 2 lan quang loi
+        "DurationOfBreak": 2000,
+        "TimeoutValue": 3000
+      },
+      "SwaggerKey": "product"
+    },
+    {
+      "UpstreamHttpMethod": [ "GET", "POST", "PUT", "PATCH", "DELETE" ],
+      "UpstreamPathTemplate": "/products/get-by-no/{any}",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5002
+        }
+      ],
+      "DownStreamPathTemplate": "/api/products/get-by-no/{any}",
+      "DownstreamScheme": "http",
+
+      "SwaggerKey": "product"
+    },
+    // BasketAPI http://localhost:5004/api/products
+    {
+      "UpstreamPathTemplate": "/baskets/{username}",
+      "UpstreamHttpMethod": [ "GET", "DELETE" ],
+
+      "DownStreamPathTemplate": "/api/baskets/{username}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5004
+        }
+      ],
+      "SwaggerKey": "basket"
+    },
+    {
+      "UpstreamPathTemplate": "/baskets",
+      "UpstreamHttpMethod": [ "POST" ],
+
+      "DownStreamPathTemplate": "/api/baskets",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5004
+        }
+      ],
+      "SwaggerKey": "basket"
+    },
+    {
+      "UpstreamPathTemplate": "/baskets/checkout",
+      "UpstreamHttpMethod": [ "POST" ],
+
+      "DownStreamPathTemplate": "/api/baskets/checkout",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5004
+        }
+      ],
+      "SwaggerKey": "basket"
+
+    },
+    // OrderAPI http://localhost:5005/api/orders
+    {
+      "UpstreamPathTemplate": "/{version}/Order/{username}",
+      "UpstreamHttpMethod": [ "GET", "PUT", "DELETE" ],
+
+      "DownStreamPathTemplate": "/api/{version}/Order/{username}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "order"
+    },
+    {
+      "UpstreamPathTemplate": "/{version}/Order",
+      "UpstreamHttpMethod": [ "POST" ],
+
+      "DownStreamPathTemplate": "/api/{version}/Order",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5005
+        }
+      ],
+      "SwaggerKey": "order"
+
+    },
+    // Inventory http://localhost:5006/api/inventory
+    {
+      "UpstreamPathTemplate": "/inventory/items/{any}",
+      "UpstreamHttpMethod": [ "GET" ],
+
+      "DownStreamPathTemplate": "/api/inventory/items/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5006
+        }
+      ],
+      "SwaggerKey": "inventory"
+
+    },
+    {
+      "UpstreamPathTemplate": "/inventory/items/{any}/paging",
+      "UpstreamHttpMethod": [ "GET" ],
+
+      "DownStreamPathTemplate": "/api/inventory/items/{any}/paging",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5006
+        }
+      ],
+      "SwaggerKey": "inventory"
+
+    },
+    {
+      "UpstreamPathTemplate": "/inventory/purchase/{any}",
+      "UpstreamHttpMethod": [ "POST" ],
+
+      "DownStreamPathTemplate": "/api/inventory/purchase/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5006
+        }
+      ],
+      "SwaggerKey": "inventory"
+
+    },
+    {
+      "UpstreamPathTemplate": "/inventory/{any}",
+      "UpstreamHttpMethod": [ "DELETE" ],
+
+      "DownStreamPathTemplate": "/api/inventory/{any}",
+      "DownstreamScheme": "http",
+      "DownstreamHostAndPorts": [
+        {
+          "Host": "localhost",
+          "Port": 5006
+        }
+      ],
+      "SwaggerKey": "inventory"
+
+    }
+  ],
+  "SwaggerEndPoints": [
+    {
+      "Key": "customer",
+      "Config": [
+        {
+          "Name": "Customer API",
+          "Version": "v1",
+          "Url": "http://localhost:5003/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "product",
+      "Config": [
+        {
+          "Name": "Product API",
+          "Version": "v1",
+          "Url": "http://localhost:5002/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "basket",
+      "Config": [
+        {
+          "Name": "Basket API",
+          "Version": "v1",
+          "Url": "http://localhost:5004/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "order",
+      "Config": [
+        {
+          "Name": "Order API",
+          "Version": "v1",
+          "Url": "http://localhost:5005/swagger/v1/swagger.json"
+        }
+      ]
+    },
+    {
+      "Key": "inventory",
+      "Config": [
+        {
+          "Name": "Inventory API",
+          "Version": "v1",
+          "Url": "http://localhost:5006/swagger/v1/swagger.json"
+        }
+      ]
+    }
+  ]
+}
