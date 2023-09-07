@@ -60,6 +60,12 @@ services:
     build: 
       context: .
       dockerfile: Services/Inventory/Inventory_gRPC/Dockerfile
+  
+  apigw.ocelot:
+    image: ${DOCKER_REGISTRY-}apigw-ocelot:${PLATFORM:-linux}-${TAG:-latest}
+    build: 
+      context: .
+      dockerfile: ApiGateways/OcelotApi/Dockerfile
 
 #network section
 networks:
